@@ -9,11 +9,20 @@ const {Client} = pg
  * But for an edeucational project we feel it is ok
 */
 const client = new Client({
-  connectionString: "postgresql://postgres:wyzzif-xawmI9-tafwos@db.whywhklbcrimotlipfpf.supabase.co:5432/postgres",
-  ssl: { rejectUnauthorized: false }
+  host: "db.vqoczgjsfpzmdunhglyo.supabase.co",
+  port: 5432,
+  database: "postgres",
+  user: "postgres",
+  password: "xykbic-gIcza6-haxsag",
+  ssl: { rejectUnauthorized: false } // Supabase requires SSL
 });
 
 client.connect()
+  .then(() => console.log("Connected to Supabase!"))
+  .catch(err => console.error("Connection error:", err));
+
+
+
 
 
 export const query = async (text, values) => {

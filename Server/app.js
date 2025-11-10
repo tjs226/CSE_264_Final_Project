@@ -19,12 +19,5 @@ app.get('/', (request, response) => {
 // run the app
 app.listen(port, async () => {
     console.log(`The Server is Running at http://localhost:${port}`)
-
-    try {
-        const result = await query('SELECT * FROM users', []);
-        console.log('Users:', result.rows);
-    } catch (err) {
-        console.error('Database connection failed:', err);
-    }
 })
 
