@@ -1,7 +1,7 @@
 -- run this file to create the tables in the database used for the project
 
 --users table
-CREATE TABLE users(
+CREATE TABLE tta_users(
   id SERIAL NOT NULL,
   first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE users(
 );
 
 -- events table 
-CREATE TABLE events(
+CREATE TABLE tta_events(
   id SERIAL NOT NULL,
   owner BIGINT NOT NULL,
   name VARCHAR(255) NOT NULL,
