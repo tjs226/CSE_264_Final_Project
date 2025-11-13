@@ -1,10 +1,11 @@
 import express from 'express'
 import { query } from './database/postgres.js'
+import cors from 'cors';
 
 // set up the app 
 const app = express()
 const port = 3000
-
+app.use(cors());
 
 /* Routes Go Here */
 
