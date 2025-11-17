@@ -1,7 +1,6 @@
 import {Dialog, DialogTitle, DialogContent, Typography, IconButton, Divider, Box, Stack, Button} from '@mui/material';
 import {useState, useEffect} from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import { use } from 'react';
 
 function EventModule({ open, onClose, event }) {
     const [hasRSVP, setHasRSVP] = useState(false);

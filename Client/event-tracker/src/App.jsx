@@ -14,12 +14,10 @@ function App() {
   return (
     <>
       <Router>  
-      
         <NavBar setMenuOpen={setMenuOpen}/>
-
         <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
 
-        {/* Routes */}
+        {/* Pages */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/manage-events" element={<EventsManager />} />
@@ -27,7 +25,6 @@ function App() {
           <Route path="/create-account" element={<CreateUser />} />
         </Routes>
       </Router>
-
     </>
   );
 }
