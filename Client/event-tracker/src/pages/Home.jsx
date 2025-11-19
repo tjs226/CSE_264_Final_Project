@@ -21,11 +21,12 @@ function Home() {
         setEventDetails({});
     }
 
-
     // get events when page loads
     useEffect(() => {
         fetchEvents();
     }, []);
+
+
 
     // function to get Events
     const fetchEvents = async () => {
@@ -43,6 +44,8 @@ function Home() {
             console.log(err);
         }
     }
+
+
 
     return (
         <>
