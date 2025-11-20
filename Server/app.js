@@ -1,7 +1,9 @@
+import 'dotenv/config'
 import express from 'express'
 import { query } from './database/postgres.js'
 import cors from 'cors';
 import crypto from 'crypto'
+import { generateToken } from './auth/auth.js'
 
 // Generate a random salt
 export function generateSalt() {
@@ -83,7 +85,6 @@ app.put('/events/:id/rsvp', async (request, response) => {
 // POST: /auth/user/add - Adds a new user to the system, Passes email and password as request body 
 app.post('/auth/user/add', async (request, response) => {
     const { first_name, last_name, email, password } = request.body
-    
     if (!email || !password) {
         return response.status(400).json({ error: "Email and password are required" })
     }
@@ -113,7 +114,50 @@ app.post('/auth/user/add', async (request, response) => {
 })
 
 // POST: /auth/login - Logs a user into the system, Checks if they exist in the database, Sets there session cookie with a token for 1 hour
-
+app.post('/auth/login', async (request, response) => {
+    const { email, password } = request.body
+    if (!email || !password) {
+        return response.status(400).json({ error: "Email and password are required" })
+    }
+    
+    try {
+        // Find user by email to see if the user exists in the system
+        const sql = `SELECT id, email, hashed_password, salt FROM tta_users WHERE email = $1`
+        const data = await query(sql, [email])
+        if (data.rows.length === 0) {
+            return response.status(401).json({ error: "Invalid email" })
+        }
+        const user = data.rows[0]
+        
+        // Hash the provided password with the stored salt
+        const hashedInputPassword = hashPassword(password, user.salt)
+        
+        // Compare hashed passwords
+        if (hashedInputPassword !== user.hashed_password) {
+            return response.status(401).json({ error: "Invalid password" })
+        }
+        
+        const token = generateToken(user.id) // Generate a JWT token for that user
+        
+        // Cookies should be set with a generated token using a secret key 
+        response.cookie("token", token, {
+            maxAge: 3600000, // 1 hour in milliseconds
+            httpOnly: false, // The cookie must be accessible by the browser (NOT AN HTTP ONLY COOKIE)
+            secure: false, 
+            sameSite: "lax",
+        })
+        
+        // Return success with token
+        response.status(200).json({ 
+            message: "Login successful",
+            token: token,
+            userId: user.id
+        })
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 // POST: /auth/logout - Logs a user out of the system, Requires an authorized user, Removes there cookie with token
 
