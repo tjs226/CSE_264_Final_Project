@@ -33,7 +33,24 @@ app.get('/', (request, response) => {
 
 
 // POST: /events - Creates a new event, Requires an authorized user, Event owner is the requester (get this from cookie with token)
+app.post('/events', requireRouteAuth, async (request, response) => {
+    const { name, date, start_time, end_time, location, description } = request.body    
+    if (!name || !date || !start_time || !end_time || !location) {
+        return response.status(400).json({ error: "Missing required fields: name, date, start_time, end_time, location" })
+    }
+    const userId = request.user 
 
+    try {
+        const sql = `INSERT INTO tta_events (owner, name, date, start_time, end_time, location, description, rsvp_amount) 
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, 0) RETURNING *`
+        const data = await query(sql, [userId, name, date, start_time, end_time, location, description])
+        
+        response.status(201).json(data.rows[0])
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 // GET: /events route - Return all events
 app.get('/events', async (request, response) => {
@@ -177,10 +194,38 @@ app.post('/auth/logout', requireRouteAuth, (request, response) => {
 })
 
 // GET: /auth/user/current - Get the current information of user logged in, Requires an authorized user 
-
+app.get('/auth/user/current', requireRouteAuth, async (request, response) => {
+    const userId = request.user
+    
+    try {
+        const sql = `SELECT * FROM tta_users WHERE id = $1`
+        const data = await query(sql, [userId])
+        
+        if (data.rows.length === 0) {
+            return response.status(404).json({ error: "User not found" })
+        }
+        
+        response.json(data.rows[0])
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 // GET: /user/events - Return the events belonging to the user currently logged in, Requires an authorized user 
-
+app.get('/user/events', requireRouteAuth, async (request, response) => {
+    const userId = request.user
+    
+    try {
+        const sql = `SELECT * FROM tta_events WHERE id = $1`
+        const data = await query(sql, [userId])
+        
+        response.json(data.rows)
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 // PUT: /user/events/:id - Updates an Event, Requires an authorized user, Can only be made by Event Owner
 
