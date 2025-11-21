@@ -3,7 +3,8 @@ import express from 'express'
 import { query } from './database/postgres.js'
 import cors from 'cors';
 import crypto from 'crypto'
-import { generateToken } from './auth/auth.js'
+import cookieParser from 'cookie-parser'
+import { generateToken, requireRouteAuth, extractToken, validateToken } from './auth/auth.js'
 
 // Generate a random salt
 export function generateSalt() {
@@ -18,6 +19,8 @@ export function hashPassword(password, salt) {
 // set up the app 
 const app = express()
 const port = 3000
+
+app.use(cookieParser())
 app.use(cors());
 app.use(express.json()) 
 
@@ -37,6 +40,7 @@ app.get('/events', async (request, response) => {
     try {
         const sql = `SELECT * FROM tta_events`;
         const data = await query(sql, []);
+        
         response.json(data.rows);
     } catch (err) {
         console.log(err);
@@ -93,6 +97,7 @@ app.post('/auth/user/add', async (request, response) => {
         // Find if user already exists
         const checkSql = `SELECT id FROM tta_users WHERE email = $1`
         const existingUser = await query(checkSql, [email])
+        
         if (existingUser.rows.length > 0) {
             return response.status(409).json({ error: "User already exists" })
         }
@@ -124,6 +129,7 @@ app.post('/auth/login', async (request, response) => {
         // Find user by email to see if the user exists in the system
         const sql = `SELECT id, email, hashed_password, salt FROM tta_users WHERE email = $1`
         const data = await query(sql, [email])
+        
         if (data.rows.length === 0) {
             return response.status(401).json({ error: "Invalid email" })
         }
@@ -160,7 +166,15 @@ app.post('/auth/login', async (request, response) => {
 })
 
 // POST: /auth/logout - Logs a user out of the system, Requires an authorized user, Removes there cookie with token
-
+app.post('/auth/logout', requireRouteAuth, (request, response) => {
+    try {
+        response.clearCookie('token') // redirectToLogin(response)
+        response.status(200).json({ message: "Logout successful" })
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 // GET: /auth/user/current - Get the current information of user logged in, Requires an authorized user 
 
