@@ -228,9 +228,57 @@ app.get('/user/events', requireRouteAuth, async (request, response) => {
 })
 
 // PUT: /user/events/:id - Updates an Event, Requires an authorized user, Can only be made by Event Owner
+app.put('/user/events/:id', requireRouteAuth, async (request, response) => {
+    const { id } = request.params
+    const { name, date, start_time, end_time, location, description } = request.body    
+    const userId = request.user 
 
+    try {
+        // Check if the event exists and belongs to the user
+        const checkSql = `SELECT * FROM tta_events WHERE id = $1 AND owner = $2`
+        const existingEvent = await query(checkSql, [id, userId])
+        
+        if (existingEvent.rows.length === 0) {
+            return response.status(404).json({ error: "Event not found or you do not have permission to edit this event" })
+        }
+
+        // Update the event
+        const sql = `UPDATE tta_events 
+                     SET name = $1, date = $2, start_time = $3, end_time = $4, location = $5, description = $6
+                     WHERE id = $7 RETURNING *`
+        const data = await query(sql, [name, date, start_time, end_time, location, description, id])
+        
+        response.json(data.rows[0])
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 // DELETE: /user/:id - Deletes an Event, Requires an authorized user, Can only be made by Event Owner
+app.delete('/user/:id', requireRouteAuth, async (request, response) => {
+    const { id } = request.params
+    const userId = request.user 
+
+    try {
+        // Check if the event exists and belongs to the user
+        const checkSql = `SELECT * FROM tta_events WHERE id = $1 AND owner = $2`
+        const existingEvent = await query(checkSql, [id, userId])
+        
+        if (existingEvent.rows.length === 0) {
+            return response.status(404).json({ error: "Event not found or you do not have permission to delete this event" })
+        }
+
+        // Delete the event
+        const sql = `DELETE FROM tta_events WHERE id = $1 RETURNING *`
+        const data = await query(sql, [id])
+        
+        response.json({ message: "Event deleted successfully", event: data.rows[0] })
+    } catch (err) {
+        console.log(err)
+        response.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 
 // run the app
