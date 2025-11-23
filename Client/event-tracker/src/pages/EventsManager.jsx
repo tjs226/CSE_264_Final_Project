@@ -2,9 +2,9 @@ import { Box, Typography, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import UserEventTable from '../Components/UserEventTable';
-import AddEventModule from '../Components/AddEventModule';
-import UserEventModule from '../Components/UserEventModule';
+import UserEventTable from '../components/UserEventTable';
+import AddEventModule from '../components/AddEventModule';
+import UserEventModule from '../components/UserEventModule';
 
 const API_URL = 'http://localhost:3000';
 
@@ -14,7 +14,6 @@ function EventsManager() {
     const [loggedIn, setLoggedIn] = useState(false)
     const [events, setEvents] = useState({});
     const [addingOpen, setAddingOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
     const [eventOpen, setEventOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
 
@@ -26,7 +25,7 @@ function EventsManager() {
             setUser({});
             navigate("/login");
         }
-    }, [addingOpen, deleteOpen, eventOpen]);
+    }, [addingOpen, eventOpen]);
 
     function hasToken() {
         return document.cookie.includes("token=");

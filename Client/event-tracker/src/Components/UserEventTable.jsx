@@ -20,7 +20,7 @@ function UserEventTable({ events, openEventModule }) {
           <TableRow>
             <TableCell sx={{ backgroundColor: '#0a3561', color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>Name</TableCell>
             <TableCell sx={{ backgroundColor: '#0a3561', color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>Date</TableCell>
-            <TableCell sx={{ backgroundColor: '#0a3561', color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>RSVP</TableCell>
+            <TableCell sx={{ backgroundColor: '#0a3561', color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>RSVP's</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

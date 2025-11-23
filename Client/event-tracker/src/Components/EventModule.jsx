@@ -1,6 +1,7 @@
 import {Dialog, DialogTitle, DialogContent, Typography, IconButton, Divider, Box, Stack, Button} from '@mui/material';
 import {useState, useEffect} from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { toStandardTime } from '../utlilities/Time';
 
 const API_URL = 'http://localhost:3000';
 
@@ -69,12 +70,12 @@ function EventModule({ open, onClose, event }) {
             
             <Box>
               <Typography variant="subtitle1" fontWeight="bold" color="text.secondary">Start Time</Typography>
-              <Typography variant="body1">{event.start_time || ""}</Typography>
+              <Typography variant="body1">{toStandardTime(event.start_time) || ""}</Typography>
             </Box>
 
             <Box>
               <Typography variant="subtitle1" fontWeight="bold" color="text.secondary">End Time</Typography>
-              <Typography variant="body1">{event.end_time || ""}</Typography>
+              <Typography variant="body1">{toStandardTime(event.end_time) || ""}</Typography>
             </Box>
           </Box>
 
