@@ -17,7 +17,7 @@ function EventModule({ open, onClose, event }) {
         setCanRSVP(true);
       }
     }
-  }, [event, open]) // run this every time event and/or open chnage
+  }, [event, open]) // run this every time event and/or open chnages
 
   const sendRsvp = async () => {
     try{

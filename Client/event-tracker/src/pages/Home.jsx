@@ -46,7 +46,6 @@ function Home() {
     }
 
 
-
     return (
         <>
             <Box sx={{ marginTop: "100px", display: "flex", flexDirection: "column", alignItems: "center" }}>

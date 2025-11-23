@@ -1,6 +1,6 @@
 import { Box, Stack, Typography, TextField, Button } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
-import {useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 const API_URL = 'http://localhost:3000';
 
@@ -13,13 +13,31 @@ function Login() {
     useEffect(() => {
         setEmail("");
         setPassword("");
-    }, [])
+    }, []);
 
-    const handleLogin = () => {
-        // api call to login (use states for email and password)
+    const handleLogin = async () => {
+        try{
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ email, password }),
+            });
 
-        // redirect to manage events page if successfull
-        navigate("/manage-events");
+            const data = await res.json();
+
+            if(res.ok){
+                setEmail("");
+                setPassword("");
+                navigate("/manage-events");
+            } else if (res.status === 401) {
+                alert("Invalid Email / Password");
+            }else {
+                console.log("Error Logging in")
+            }
+        } catch (err){
+            console.log(err);
+        }
     };
 
     return (
@@ -43,9 +61,11 @@ function Login() {
                             backgroundColor: "white",
                         },
                         marginTop: "50px",
-                        "& .MuiInputLabel-root.Mui-focused": {
-                            color: "#ff9800",
-                        },
+
+                        // orange label on focus & when filled
+                        "& .MuiInputLabel-root.Mui-focused": { color: "#ff9800" },
+                        "& .MuiInputLabel-root.MuiInputLabel-shrink": { color: "#ff9800" },
+
                         "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
                             borderColor: "#ff9800",
                         },
@@ -64,9 +84,11 @@ function Login() {
                         "& .MuiOutlinedInput-root": {
                             backgroundColor: "white",
                         },
-                        "& .MuiInputLabel-root.Mui-focused": {
-                            color: "#ff9800",
-                        },
+
+                        // orange label on focus & shrink
+                        "& .MuiInputLabel-root.Mui-focused": { color: "#ff9800" },
+                        "& .MuiInputLabel-root.MuiInputLabel-shrink": { color: "#ff9800" },
+
                         "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
                             borderColor: "#ff9800",
                         },
@@ -77,13 +99,25 @@ function Login() {
                 <Button
                     variant="contained"
                     onClick={handleLogin}
-                    sx={{ backgroundColor: "#ff9800", "&:hover": { backgroundColor: "#e68a00"}, width: "120px", alignSelf: "center" }}
+                    disabled={!email || !password}
+                    sx={{
+                        backgroundColor: "#ff9800",
+                        "&:hover": { backgroundColor: "#e68a00" },
+
+                        // Disabled styling
+                        "&.Mui-disabled": {
+                            backgroundColor: "#935800",
+                            color: "white",
+                            },
+
+                        width: "120px",
+                        alignSelf: "center",
+                    }}
                 >
                     Log In
                 </Button>
-                
 
-                {/* Create Account Text */}
+                {/* Create Account Link */}
                 <Box sx={{ alignSelf: "center" }}>
                     <Link to='/create-account' style={{ textDecoration: "none" }}>
                         <Typography sx={{ color: "white", "&:hover": { textDecoration: "underline" } }}>
@@ -91,12 +125,10 @@ function Login() {
                         </Typography>
                     </Link>
                 </Box>
-            
 
             </Stack>
         </Box>
     );
 }
-
 
 export default Login;

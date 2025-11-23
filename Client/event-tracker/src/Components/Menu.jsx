@@ -10,20 +10,62 @@ function Menu({ menuOpen, setMenuOpen }) {
     const [user, setUser] = useState({ });
     const navigate = useNavigate();
 
+    // api call to see if logged in
+    // if so set the current user of the system
+    // otherwise set the current user of the system to {}
     useEffect(() => {
-        // api call to see if logged in
-        // if so set the current user of the system
-        // otherwise set the current user of the system to {}
-    }, [menuOpen])
+        if (menuOpen && hasToken()){
+            getCurrentUser();
+        }
+    }, [menuOpen]);
 
+    function hasToken() {
+        return document.cookie.includes("token=");
+    }
+
+    const getCurrentUser = async () => {
+        try {
+            const res = await fetch(`${API_URL}/auth/user/current`, {
+                method: "GET",
+                credentials: "include",
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                setLoggedIn(true);
+                setUser(data);
+            } else {
+                setLoggedIn(false);
+                setUser({});
+            }
+        } catch (err) {
+            setLoggedIn(false);
+            setUser({});
+            console.log(err);
+        }
+    };
 
     const handleLogout = async () => {
-        setMenuOpen(false);
-        setLoggedIn(false);
-        // api call to log out of the system
+        try {
+            const res = await fetch(`${API_URL}/auth/logout`, {
+                method: "POST",
+                credentials: "include",
+            });
 
-        // redirect back to home page
-        navigate("/");
+            if (res.ok){
+                setMenuOpen(false);
+                setLoggedIn(false);
+                setUser({});
+                navigate("/");
+            }else {
+                console.log("error logging out");
+                alert("error logging out");
+            }
+
+        } catch (err) {
+            console.log(err);
+            alert("error logging out");
+        }
     };
 
     const linkStyle = {
@@ -46,8 +88,8 @@ function Menu({ menuOpen, setMenuOpen }) {
                 {
                     loggedIn ? ( // if they are logged in Show User Information 
                         <>
-                            <Typography variant="h6" sx={{alignSelf: "center"}}>User Name</Typography>
-                            <Typography variant="body2" sx={{alignSelf: "center"}}>User Email</Typography>
+                            <Typography variant="h6" sx={{alignSelf: "center"}}>{`${user.first_name} ${user.last_name}`}</Typography>
+                            <Typography variant="body2" sx={{alignSelf: "center"}}>{user.email}</Typography>
                         
                             <div style={{ height: "1px", background: "rgba(255,255,255,0.3)", margin: "8px 0" }}></div>
 
