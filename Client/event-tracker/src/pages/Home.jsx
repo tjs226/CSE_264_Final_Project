@@ -6,16 +6,18 @@ import EventModule from '../Components/EventModule';
 const API_URL = 'http://localhost:3000';
 
 function Home() {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState([]); // holds events from api calll
 
     // state management for the module
     const [eventModuleOpen, setEventModuleOpen] = useState(false);
     const [eventDetails, setEventDetails] = useState({});
+    
     const openEventModule = (event) => {
         setEventDetails(event);
         setEventModuleOpen(true);
 
     };
+
     const closeEventModule = () => {
         setEventModuleOpen(false);
         setEventDetails({});

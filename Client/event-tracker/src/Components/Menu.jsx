@@ -5,24 +5,28 @@ import { useState, useEffect} from 'react'
 const API_URL = 'http://localhost:3000';
 
 function Menu({ menuOpen, setMenuOpen }) {
+    // menu open is the condition for the menu to open
 
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState({ });
+    const [loggedIn, setLoggedIn] = useState(false); // is there a logged in user
+    const [user, setUser] = useState({ }); // is there a user (information)
     const navigate = useNavigate();
 
-    // api call to see if logged in
-    // if so set the current user of the system
-    // otherwise set the current user of the system to {}
+    /* api call to see if logged in
+     * if so set the current user of the system
+     * otherwise set the current user of the system to {}
+    */ 
     useEffect(() => {
-        if (menuOpen && hasToken()){
+        if (menuOpen && hasToken()){ // only if the user has a token do we make this api call
             getCurrentUser();
         }
     }, [menuOpen]);
 
+    // function to look to see if there is a cookie set in the browser (may not be a valid cookie)
     function hasToken() {
         return document.cookie.includes("token=");
     }
 
+    // api call to get the current user (checks the cookie)
     const getCurrentUser = async () => {
         try {
             const res = await fetch(`${API_URL}/auth/user/current`, {
@@ -45,6 +49,7 @@ function Menu({ menuOpen, setMenuOpen }) {
         }
     };
 
+    // api call to log the user out of the system 
     const handleLogout = async () => {
         try {
             const res = await fetch(`${API_URL}/auth/logout`, {

@@ -3,19 +3,19 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import UserEventTable from '../components/UserEventTable';
-import AddEventModule from '../components/AddEventModule';
-import UserEventModule from '../components/UserEventModule';
+import AddEventModule from '../Components/AddEventModule';
+import UserEventModule from '../Components/UserEventModule';
 
 const API_URL = 'http://localhost:3000';
 
 function EventsManager() {
     const navigate = useNavigate();
-    const [user, setUser] = useState({});
-    const [loggedIn, setLoggedIn] = useState(false)
-    const [events, setEvents] = useState({});
-    const [addingOpen, setAddingOpen] = useState(false);
-    const [eventOpen, setEventOpen] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState({});
+    const [user, setUser] = useState({}); // curent user of the system
+    const [loggedIn, setLoggedIn] = useState(false) // if the user is logged in 
+    const [events, setEvents] = useState({}); // events beloging to the user
+    const [addingOpen, setAddingOpen] = useState(false); // state to open add event module
+    const [eventOpen, setEventOpen] = useState(false); // state to open event module for event info
+    const [selectedEvent, setSelectedEvent] = useState({}); // state to hold selected event that the user clicks on
 
     useEffect(() => {
         if (hasToken()){
@@ -23,14 +23,16 @@ function EventsManager() {
         } else {
             setLoggedIn(false);
             setUser({});
-            navigate("/login");
+            navigate("/login"); // broswer does not have valid token, redirect them to login
         }
-    }, [addingOpen, eventOpen]);
+    }, [addingOpen, eventOpen]); // need to run this to refresh the table every time we could edit, add, or delete 
 
+    // checks browser to see if it has a token (note: this token may not be valic)
     function hasToken() {
         return document.cookie.includes("token=");
     };
 
+    // api call to get the current user (checks token)
     const getCurrentUser = async () => {
         try {
             const res = await fetch(`${API_URL}/auth/user/current`, {
@@ -42,11 +44,11 @@ function EventsManager() {
                 const data = await res.json();
                 setLoggedIn(true);
                 setUser(data);
-                fetchEvents();
+                fetchEvents(); // fetch the events that the current user owns
             } else {
                 setLoggedIn(false);
                 setUser({});
-                navigate("/login");
+                navigate("/login"); // failed to authenicate user, redirect them to log in
             }
         } catch (err) {
             setUser({});
@@ -56,6 +58,7 @@ function EventsManager() {
         }
     };
 
+    // api call the get the events belonging to a user
     const fetchEvents = async () => {
         try {
             const res = await fetch(`${API_URL}/user/events`, {
@@ -75,11 +78,13 @@ function EventsManager() {
         }
     };
 
+    // helper function to open the module for a given event (displays event info)
     const openSelectedEvent = (event) => {
         setEventOpen(true);
         setSelectedEvent(event);
     };
 
+    // helper function to close the module for a given event
     const closeSelectedEvent = () => {
         setEventOpen(false);
         setSelectedEvent(false);
@@ -120,7 +125,7 @@ function EventsManager() {
                     <UserEventTable events={events} openEventModule={openSelectedEvent}/>
 
 
-                    {/* Add Button*/}
+                    {/* Add Button */}
                     <IconButton
                         size="large"
                         aria-label="add event"
@@ -137,10 +142,10 @@ function EventsManager() {
                         <AddIcon />
                     </IconButton>
 
-                    {/* Add Event Module (hidden)*/}
+                    {/* Add Event Module (hidden by default)*/}
                     <AddEventModule open={addingOpen} onClose={setAddingOpen}/>
 
-                    {/* Event Module (hidden) */}
+                    {/* Event Module (hidden by default) */}
                     <UserEventModule open={eventOpen} onClose={closeSelectedEvent} event={selectedEvent} />
 
                 </Box>

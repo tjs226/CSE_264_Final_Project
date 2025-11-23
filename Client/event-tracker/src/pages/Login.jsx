@@ -13,8 +13,9 @@ function Login() {
     useEffect(() => {
         setEmail("");
         setPassword("");
-    }, []);
+    }, []); // clear the state everytime the page loads
 
+    // api call to login to the system (sets the users cookie)
     const handleLogin = async () => {
         try{
             const res = await fetch(`${API_URL}/auth/login`, {

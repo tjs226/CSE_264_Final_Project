@@ -6,7 +6,7 @@ import { toStandardTime } from '../utlilities/Time';
 const API_URL = 'http://localhost:3000';
 
 function EventModule({ open, onClose, event }) {
-  const [canRSVP, setCanRSVP] = useState(true);
+  const [canRSVP, setCanRSVP] = useState(true); // state to hold if the user has rsvp (local storage)
 
   // go into localStore and see if they rsvp'd for that given event
   useEffect(() => {
@@ -20,6 +20,7 @@ function EventModule({ open, onClose, event }) {
     }
   }, [event, open]) // run this every time event and/or open chnages
 
+  // make api call to rsvp to an event
   const sendRsvp = async () => {
     try{
       const response = await fetch(`${API_URL}/events/${event.id}/rsvp`, {

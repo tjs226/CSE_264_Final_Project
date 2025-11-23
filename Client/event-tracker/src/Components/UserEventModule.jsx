@@ -9,23 +9,29 @@ import DeleteConfirmationModule from './DeleteConfirmationModule';
 const API_URL = 'http://localhost:3000';
 
 function UserEventModule({ open, onClose, event }) {
-    const [isEditing, setIsEditing] = useState(false); // toggle from edit mode
-    const [isDeleting, setIsDeleting] = useState(false);
+    // open is the condition to open the module
+    // onClose is the closeModule function to reset the selected event and close the module
+    // event is the selected event
 
-    const [name, setName] = useState('');
-    const [date, setDate] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [location, setLocation] = useState('');
-    const [description, setDescription] = useState('');
-    const [rsvp, setRsvp] = useState('');
+    const [isEditing, setIsEditing] = useState(false); // state to switch between viewing and editing mode
+    const [isDeleting, setIsDeleting] = useState(false); // state to display a delete confirmation 
+
+    /* State for each component of an event becuase we could edit them (thats why they must be individual) */
+    const [name, setName] = useState(''); // state to hold the name of the event
+    const [date, setDate] = useState(''); // state to hold the date of the event
+    const [startTime, setStartTime] = useState(''); // state to hold the start time of the event 
+    const [endTime, setEndTime] = useState(''); // state to hold the end time of the event 
+    const [location, setLocation] = useState(''); // state to hold the location of the event 
+    const [description, setDescription] = useState(''); // state to hold the desc of the event 
+    const [rsvp, setRsvp] = useState(''); // state to hold the rsvp amount (not editable!!!)
 
     useEffect(() => {
         if (event.id) {
-            fetchEventInfo(); // since we can edit we much fetch the new info often
+            fetchEventInfo(); 
         }
-    }, [event, isEditing, isDeleting]);
+    }, [event, isEditing, isDeleting]); // since we can edit we much fetch the new info often
 
+    // api call to ge the informatio for an event
     const fetchEventInfo = async () => {
         try {
             const res = await fetch(`${API_URL}/events/${event.id}`, {
@@ -54,6 +60,7 @@ function UserEventModule({ open, onClose, event }) {
         }
     }
 
+    // api call to update an event (flushes states to database)
     const handleUpdate = async () => {
         try {
             const res = await fetch(`${API_URL}/user/events/${event.id}`, {
@@ -84,7 +91,7 @@ function UserEventModule({ open, onClose, event }) {
         }
     };
 
-    /* Handles the state logic for the effect that you arr clicking out of 
+    /* Handles the state logic for the effect that you are clicking out of 
      * a module when really you just want to toggle between editing mode 
      * or exiting the window 
     */
@@ -109,13 +116,13 @@ function UserEventModule({ open, onClose, event }) {
 
                 {isEditing ? (
                         <>
-                            <IconButton onClick={() => { setIsEditing(false); }}>
+                            <IconButton onClick={() => { setIsEditing(false); }}> {/* turns off editing mode */}
                                 <CloseIcon />
                             </IconButton>
                         </>
                     ) : (
                         <>
-                            <IconButton onClick={() => { setIsEditing(false); onClose(); }}>
+                            <IconButton onClick={() => { setIsEditing(false); onClose(); }}> {/* closes the event module */}
                                 <CloseIcon />
                             </IconButton>
                         </>
@@ -128,6 +135,7 @@ function UserEventModule({ open, onClose, event }) {
             <DialogContent sx={{ pt: 1 }}>
                 <Divider sx={{ mb: 2 }} />
                 
+                {/* if edit mode display text boxes and selectors, otherwise display plain text*/}
                 {isEditing ? (
                     <Stack spacing={2}>
                         <TextField label="Event Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth required />
@@ -176,47 +184,30 @@ function UserEventModule({ open, onClose, event }) {
             </DialogContent>
 
             <DialogActions sx={{ justifyContent: 'center' }}>
+                {/* if editing display cancel and save buttons, other wise edit or delete buttons */}
                 {isEditing ? (
                     <>
-                        <Button
-                            onClick={() => { setIsEditing(false); }}
-                            sx={{
-                                backgroundColor: "#0a3561",
-                                color: "white",
-                                "&:hover": {
-                                    backgroundColor: "#08304f",  
-                                },
-                            }}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            onClick={handleUpdate}
-                            sx={{
-                                backgroundColor: "#ff9800",
-                                color: "white",
-                                "&:hover": {
-                                    backgroundColor: "#e68a00",  
-                                },
-                            }}
-                        >
-                            Save
-                        </Button>
+                        <Button onClick={() => { setIsEditing(false); }}>Cancel</Button>
+                        <Button variant="contained" onClick={handleUpdate} color="primary">Save</Button>
                     </>
                 ) : (
                     <>
                         <IconButton onClick={() => setIsEditing(true)} color="primary" aria-label="edit">
-                            <EditIcon sx={{color: "#ff9800"}}/>
+                            <EditIcon sx={{color: "primary"}}/>
                         </IconButton>
 
-                        <IconButton onClick={() => setIsDeleting(true)} color="primary" aria-label="edit">
-                            <DeleteIcon sx={{color: "#0a3561"}}/>
+                        <IconButton onClick={() => setIsDeleting(true)} color="primary" aria-label="edit"> {/* Opens Delete confirmation */}
+                            <DeleteIcon sx={{color: "red"}}/>
                         </IconButton>
 
                         {/* Delete Module */}
-                        <DeleteConfirmationModule open={isDeleting} onCancel={setIsDeleting} onDelete={onClose}/>
+                        <DeleteConfirmationModule 
+                            open={isDeleting} 
+                            onCancel={setIsDeleting} 
+                            onDelete={onClose} 
+                            eventId={event.id}
+                            eventName={event.name}
+                        />
                     </>
                 )}
             </DialogActions>

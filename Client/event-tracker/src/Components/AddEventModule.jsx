@@ -19,9 +19,9 @@ function AddEventModule({open, onClose }) {
         setEndTime("");
         setLocation("");
         setDescription("");
-    }, []);
+    }, []); // everytime page loads reset the states 
 
-
+    // api call to create new event
     const handleSubmit = async () => {
         try {
             const res = await fetch(`${API_URL}/events`, {

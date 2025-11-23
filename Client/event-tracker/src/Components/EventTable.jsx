@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 
 function EventTable({ events, openEventModule }) {
+  
   return (
     <TableContainer
       component={Paper}

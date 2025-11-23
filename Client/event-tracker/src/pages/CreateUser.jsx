@@ -12,6 +12,7 @@ function CreateUser() {
     const [lastName, setLastName] = useState("");
     const navigate = useNavigate();
 
+    // api call to create a new user 
     const handleCreateAccount = async () => {
         try {
             const res = await fetch(`${API_URL}/auth/user/add`, {
@@ -33,7 +34,7 @@ function CreateUser() {
                 setLastName("");
                 setEmail("");
                 setPassword("");
-                navigate("/login");
+                navigate("/login"); // if sucessfull, redirect to login 
             } else {
                 alert("Failed to Create Account, User with Email May Already Exist");
             }

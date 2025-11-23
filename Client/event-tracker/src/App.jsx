@@ -8,13 +8,14 @@ import CreateUser from './pages/CreateUser.jsx';
 import Menu from './Components/Menu.jsx';
 
 function App() {
+  // state to hold if the side menu is open or closed 
   const [menuOpen, setMenuOpen] = useState(false);
 
 
   return (
     <>
       <Router>  
-        <NavBar setMenuOpen={setMenuOpen}/>
+        <NavBar setMenuOpen={setMenuOpen}/> {/* setMenuOpen allows the nav bar to open the side menu too ! */}
         <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
 
         {/* Pages */}
