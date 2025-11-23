@@ -21,8 +21,11 @@ const app = express()
 const port = 3000
 
 app.use(cookieParser())
-app.use(cors());
 app.use(express.json()) 
+app.use(cors({
+    origin: "http://localhost:5173", 
+    credentials: true                 
+}));
 
 /* Routes Go Here */
 
@@ -217,7 +220,7 @@ app.get('/user/events', requireRouteAuth, async (request, response) => {
     const userId = request.user
     
     try {
-        const sql = `SELECT * FROM tta_events WHERE id = $1`
+        const sql = `SELECT * FROM tta_events WHERE owner = $1`
         const data = await query(sql, [userId])
         
         response.json(data.rows)
