@@ -1,4 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
+import { formatDate } from '../utlilities/Date'
+import { sortEventsByDate } from '../utlilities/SortEvents';
+
 
 function UserEventTable({ events, openEventModule }) {
   return (
@@ -25,7 +28,7 @@ function UserEventTable({ events, openEventModule }) {
         </TableHead>
         <TableBody>
           {events.length > 0 ? (
-            events.map((e) => (
+            sortEventsByDate(events).map((e) => (
               <TableRow
                 key={e.id}
                 sx={{
@@ -41,7 +44,7 @@ function UserEventTable({ events, openEventModule }) {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">{e.date}</Typography>
+                  <Typography variant="h6">{formatDate(e.date)}</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">{e.rsvp_amount ?? 0}</Typography>

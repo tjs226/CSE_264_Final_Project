@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import UserEventTable from '../components/UserEventTable';
-import AddEventModule from '../Components/AddEventModule';
-import UserEventModule from '../Components/UserEventModule';
+import AddEventModule from '../components/AddEventModule';
+import UserEventModule from '../components/UserEventModule';
 
 const API_URL = 'http://localhost:3000';
 

@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
 import { toStandardTime } from '../utlilities/Time'
+import { formatDate } from '../utlilities/Date'
 import DeleteConfirmationModule from './DeleteConfirmationModule';
 
 const API_URL = 'http://localhost:3000';
@@ -141,7 +142,7 @@ function UserEventModule({ open, onClose, event }) {
                         <TextField label="Event Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth required />
                         
                         <TextField
-                            label="Date" type="date" value={date}
+                            label="Date" type="date" value={formatDate(date)}
                             onChange={(e) => setDate(e.target.value)}
                             InputLabelProps={{ shrink: true }}
                             fullWidth
@@ -172,7 +173,7 @@ function UserEventModule({ open, onClose, event }) {
                     </Stack>
                 ) : (
                     <Stack spacing={2}>
-                        <Typography><strong>Date:</strong> {date}</Typography>
+                        <Typography><strong>Date:</strong> {formatDate(date)}</Typography>
                         <Typography><strong>Start:</strong> {toStandardTime(startTime)}</Typography>
                         <Typography><strong>End:</strong> {toStandardTime(endTime)}</Typography>
                         <Typography><strong>Location:</strong> {location}</Typography>

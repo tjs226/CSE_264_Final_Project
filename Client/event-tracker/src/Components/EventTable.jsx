@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
-
+import { formatDate } from '../utlilities/Date'
+import { sortEventsByDate } from '../utlilities/SortEvents';
 function EventTable({ events, openEventModule }) {
   
   return (
@@ -26,7 +27,7 @@ function EventTable({ events, openEventModule }) {
         </TableHead>
         <TableBody>
           {events.length > 0 ? (
-            events.map((e) => (
+            sortEventsByDate(events).map((e) => (
               <TableRow
                 key={e.id}
                 sx={{ '&:nth-of-type(odd)': { backgroundColor: 'white' }, '&:hover': { backgroundColor: '#32689fff' } }}
@@ -39,7 +40,7 @@ function EventTable({ events, openEventModule }) {
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">
-                    {e.date}
+                    {formatDate(e.date)}
                   </Typography>
                 </TableCell>
                 <TableCell>

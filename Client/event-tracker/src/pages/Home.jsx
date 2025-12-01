@@ -1,7 +1,7 @@
 import { Typography, Box } from '@mui/material';
 import { useState, useEffect } from 'react';
-import EventTable from '../Components/EventTable';
-import EventModule from '../Components/EventModule';
+import EventTable from '../components/EventTable';
+import EventModule from '../components/EventModule';
 
 const API_URL = 'http://localhost:3000';
 

@@ -2,6 +2,7 @@ import {Dialog, DialogTitle, DialogContent, Typography, IconButton, Divider, Box
 import {useState, useEffect} from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { toStandardTime } from '../utlilities/Time';
+import { formatDate } from '../utlilities/Date'
 
 const API_URL = 'http://localhost:3000';
 
@@ -64,7 +65,7 @@ function EventModule({ open, onClose, event }) {
           
           <Box>
             <Typography variant="subtitle1" fontWeight="bold" color="text.secondary">Date</Typography>
-            <Typography variant="body1">{event.date || ""}</Typography>
+            <Typography variant="body1">{formatDate(event.date) || ""}</Typography>
           </Box>
 
           <Box sx={{ display: 'flex', gap: 4 }}>
