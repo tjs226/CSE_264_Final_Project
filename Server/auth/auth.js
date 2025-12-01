@@ -1,3 +1,7 @@
+/* Load System Env Variables */
+import dotenv from 'dotenv';
+dotenv.config();
+
 import jwt from 'jsonwebtoken';
 
 /**
@@ -6,8 +10,8 @@ import jwt from 'jsonwebtoken';
  * and redirecting unathorized ussers to the login page.
  */
 
-/** Secret key used to sign JWT tokens */ // I hope this works correctly
-const secretKey = process.env.SECRET_KEY || 'fffae575e457f3efaf7647f41776c7722d80cd4cc706d4bf85839f9e709014e42b8f51315484915755e686997d64cde6e77bf4d2e16e8e6ee7838f1a2f662092';
+/* Secret key used to sign JWT tokens */ 
+const secretKey = process.env.SECRET_KEY;
 
 /**
  * Generates a JWT token for a given user ID

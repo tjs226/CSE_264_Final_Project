@@ -1,23 +1,23 @@
+/* Load System Env Variables */
+import dotenv from 'dotenv';
+dotenv.config();
+
 import pg from 'pg'
 
 const {Client} = pg
 
 
-/* Connection to out databaase (SupaBase)
- * 
- * Theese Creds should not be stored in plain text, 
- * But for an edeucational project we feel it is ok
-*/
+/* Connection to databaase */
 const client = new Client({
-  host: "cse264.cru8ico68j35.us-east-1.rds.amazonaws.com",
-  port: 5432,
-  database: "cse264",
-  user: "tta",
-  password: "tta_lehigh",
-  ssl: {
-    rejectUnauthorized: false
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  ssl: { 
+    rejectUnauthorized: false 
   }
-})
+});
 
 
 client.connect()

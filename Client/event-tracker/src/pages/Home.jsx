@@ -26,7 +26,7 @@ function Home() {
     // get events when page loads
     useEffect(() => {
         fetchEvents();
-    }, []);
+    }, [eventModuleOpen]); // run whenever we open a module
 
 
 

@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import express from 'express'
 import { query } from './database/postgres.js'
 import cors from 'cors';
