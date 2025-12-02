@@ -13,13 +13,15 @@ function AddEventModule({open, onClose }) {
     const [description, setDescription] = useState("");
 
     useEffect(() => {
-        setName("");
-        setDate("");
-        setStartTime("");
-        setEndTime("");
-        setLocation("");
-        setDescription("");
-    }, []); // everytime page loads reset the states 
+        if (open) {
+            setName("");
+            setDate("");
+            setStartTime("");
+            setEndTime("");
+            setLocation("");
+            setDescription("");
+        }
+    }, [open]); // everytime module opens 
 
     // api call to create new event
     const handleSubmit = async () => {
@@ -50,6 +52,18 @@ function AddEventModule({open, onClose }) {
             console.log(err);
             onClose(false);
         }
+    };
+
+    /* helper function to check if the user input is valid (sanitize)*/
+    const isFormValid = () => {
+        return (
+            name.trim() !== "" &&
+            date.trim() !== "" &&
+            startTime.trim() !== "" &&
+            endTime.trim() !== "" &&
+            location.trim() !== "" &&
+            description.trim() !== ""
+        );
     };
 
 
@@ -132,7 +146,7 @@ function AddEventModule({open, onClose }) {
                                 <Button 
                                     type="submit" 
                                     variant="contained" sx={{ ml: 2 }} 
-                                    disabled={!name || !date || !startTime || !endTime || !location || !description}
+                                    disabled={!isFormValid()}
                                     onClick={handleSubmit}
                                 >
                                     Create
